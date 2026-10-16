@@ -36,6 +36,6 @@ jobs:
       - name: Install test dependencies
         run: composer install --no-interaction --prefer-dist --no-progress --no-plugins --no-scripts
       - name: Check PHP syntax
-        run: composer run lint
+        run: composer --no-plugins run lint
       - name: Run complete isolated tests
         run: php tests/run.php vendor/autoload.php

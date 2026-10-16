@@ -28,7 +28,7 @@ try {
   $state = new FormState();
   $form = $release->buildForm([], $state, TRUE);
   $html = (string) \Drupal::service('renderer')->renderInIsolation($form);
-  je_editorial_check(str_contains($html, '<dialog') && str_contains($html, '/ai-beitragseinreichung/wiki'), 'Dialog oder Original-Wiki fehlt.');
+  je_editorial_check(str_contains($html, '<dialog') && str_contains($html, '/ai-beitragseinreichung-drupal/wiki'), 'Dialog oder Drupal-Wiki fehlt.');
   $release->submitForm($form, $state);
   je_editorial_check(\Drupal::service('user.data')->get('je_ai_submission', 2, 'release_seen') === ReleaseNotes::VERSION, 'Versionsbestätigung nicht kontogebunden gespeichert.');
   $gateway = new class implements AiTextGatewayInterface {

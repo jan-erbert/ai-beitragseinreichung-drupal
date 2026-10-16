@@ -8,3 +8,6 @@
 *.log
 *.zip
 /.phpunit.cache/
+
+__pycache__/
+*.py[cod]

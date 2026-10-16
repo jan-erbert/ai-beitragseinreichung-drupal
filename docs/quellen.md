@@ -1,10 +1,11 @@
 # Quellen und Abgrenzung zum Original
 
-Diese Anleitung beschreibt den Drupal-Quellcode und die Standardkonfiguration für **1.0.0**. Die Themen orientieren sich am Original-Wiki; die beschriebenen Funktionen am eigenständigen Drupal-Modul.
+Diese Anleitung beschreibt den Drupal-Quellcode und die Standardkonfiguration für **1.0.1**. Die Themen orientieren sich am Original-Wiki; die beschriebenen Funktionen am eigenständigen Drupal-Modul.
 
 ## Maßgebliche Quellen
 
-- [Original-Wiki für WordPress](https://github.com/jan-erbert/ai-beitragseinreichung/wiki): fachliche Themenvorlage, keine Drupal-Installationsanleitung.
+- [Drupal-Wiki](https://github.com/jan-erbert/ai-beitragseinreichung-drupal/wiki): aus denselben Dateien unter `docs/` erzeugte Online-Anleitung.
+- [WordPress-Originalprojekt](https://github.com/jan-erbert/ai-beitragseinreichung): fachlicher Vorgänger; kein Drupal-Installationspaket.
 - Drupal-Repository: Formulare unter `src/Form/`, Dienste unter `src/Service/`, Zugriffe in `je_ai_submission.routing.yml` und `je_ai_submission.permissions.yml`.
 - `config/install/je_ai_submission.settings.yml`: Vorgaben für neue Installationen.
 - `config/schema/je_ai_submission.schema.yml` und `je_ai_submission.install`: Konfigurationsschema und Updates.

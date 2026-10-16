@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.1 – 2026-10-16
+
+- Drupal-Wiki aus `docs/` mit Navigation, umgeschriebenen Verweisen und Bildern eingerichtet; alte WordPress-Wiki-Verweise im Modul und aktuellen Anleitungen ersetzt.
+- Gemeinsamen lokalen Veröffentlichungsweg für getrennte interne und öffentliche Git-Historien plus Wiki ergänzt. Saubere Arbeitsbäume, Zielprüfung, Secret-Muster und lokale Ausschlussregeln werden vor dem Push geprüft.
+- PHP-8.3-/8.4-Workflows auf GitHub und Forgejo, Drupal-Paketquelle und konsistente Composer-Pluginsperre eingerichtet. Drupal-Einstieg und Installation werden mitgeprüft.
+- Projektregeln für Agenten und Veröffentlichungsanleitung ergänzt; Wiki- und Schutzregeln mit isolierten Python-Tests abgesichert.
+
 ## 1.0.0 – 2026-10-16
 
 ### Veröffentlichung

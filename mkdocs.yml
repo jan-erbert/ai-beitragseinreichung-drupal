@@ -21,4 +21,5 @@ nav:
   - Entwicklung:
       - Architektur und offene Funktionen: entwicklung.md
       - Dokumentation und Backstage: backstage.md
+      - Gemeinsam veröffentlichen: veroeffentlichen.md
       - Quellen und Abgrenzung zum Original: quellen.md

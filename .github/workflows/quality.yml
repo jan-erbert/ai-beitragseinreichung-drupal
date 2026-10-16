@@ -35,6 +35,8 @@ jobs:
         run: composer validate --strict
       - name: Install test dependencies
         run: composer install --no-interaction --prefer-dist --no-progress --no-plugins --no-scripts
+      - name: Test publication safeguards
+        run: python3 -m unittest discover -s tests -p 'test_publication.py'
       - name: Check PHP syntax
         run: composer --no-plugins run lint
       - name: Run complete isolated tests

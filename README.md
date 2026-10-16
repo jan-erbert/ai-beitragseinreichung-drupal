@@ -2,7 +2,7 @@
 
 Zusätzliche Beitragserstellung mit Drupal AI: Ausgangstext eingeben, KI-Vorschlag prüfen und im normalen Drupal-Beitragseditor weiterbearbeiten. Die klassische Erstellung ohne KI bleibt erhalten.
 
-**Stand: Version 1.0.0.** Die vollständige, allgemein gehaltene [Anleitung unter docs](docs/index.md) beschreibt Redaktion, Administration und Entwicklung mit Abbildungen der Bedienoberfläche. `mkdocs.yml` enthält die Navigation. Ein eigenes Wiki ist weiterhin zurückgestellt; die Anleitung liegt vollständig in diesem Repository.
+**Stand: Version 1.0.1.** Die vollständige, allgemein gehaltene [Anleitung unter docs](docs/index.md) beschreibt Redaktion, Administration und Entwicklung mit Abbildungen der Bedienoberfläche. `mkdocs.yml` enthält die Navigation. Das [GitHub-Wiki](https://github.com/jan-erbert/ai-beitragseinreichung-drupal/wiki) wird aus denselben Dateien erzeugt.
 
 ## Funktionsumfang
 
@@ -35,7 +35,7 @@ Weiter: [Installation](docs/installation.md) · [Stilgruppen](docs/stilgruppen.m
 ```bash
 php tests/run.php
 php tests/run.php /pfad/zum/drupal/vendor/autoload.php
-composer run lint
+composer --no-plugins run lint
 mkdocs build --strict --site-dir /tmp/je-ai-submission-docs
 ```
 
@@ -50,3 +50,9 @@ Das öffentliche Repository heißt [ai-beitragseinreichung-drupal](https://githu
 GitHub Actions prüft Composer-Metadaten, PHP-Syntax und die isolierten Tests mit Composer-Abhängigkeiten unter PHP 8.3 und 8.4. Native Drupal-Integrationstests erfordern zusätzlich eine passend eingerichtete Testinstallation; sie werden durch diese Prüfungen nicht ersetzt. Dependabot prüft monatlich Composer- und Action-Abhängigkeiten. Änderungen an Abhängigkeiten werden als Pull Request vorgeschlagen.
 
 Für Forgejo liegt dieselbe PHP-Prüfung unter `.forgejo/workflows/quality.yml`. Dort sind Action-Quellen als vollständige URLs angegeben; GitHub verwendet die übliche Schreibweise unter `.github/workflows/quality.yml`. Beide prüfen PHP 8.3 und 8.4. Composer-Plugins bleiben bei der isolierten Paketinstallation und beim Lint ausgeschaltet; Website-Dateien werden dabei nicht erzeugt oder verändert.
+
+## Gemeinsam veröffentlichen
+
+Im als Quelle eingerichteten Checkout `git publish` verwenden. Der Befehl prüft den eingecheckten Stand und aktualisiert Forgejo, die öffentliche GitHub-Kopie und deren Wiki. `git publish --check` führt nur die Vorprüfung aus. Rohes `git push` betrifft weiterhin nur sein jeweiliges Ziel und ersetzt diesen gemeinsamen Ablauf nicht.
+
+Einrichtung, Grenzen und Umgang mit Teilfehlern: [Veröffentlichungsanleitung](docs/veroeffentlichen.md). Die vollständige interne Historie darf nicht auf den öffentlichen Branch gespiegelt werden. Wiki-Seiten ausschließlich unter `docs/` bearbeiten.

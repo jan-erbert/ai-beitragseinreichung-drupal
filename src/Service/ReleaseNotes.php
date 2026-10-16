@@ -6,9 +6,9 @@ namespace Drupal\je_ai_submission\Service;
 
 /** Enthält die tatsächlichen Neuerungen dieser Drupal-Version. */
 final class ReleaseNotes {
-  public const VERSION = '1.0.0';
+  public const VERSION = '1.0.1';
 
-  /** Baut einen lokal gepflegten Hinweis mit dem vorläufigen Original-Wiki. */
+  /** Baut den Versionshinweis mit der aktuellen Drupal-Anleitung. */
   public static function content(): array {
     return [
       'visual' => ['#type' => 'container', '#attributes' => ['class' => ['je-ai-motion'], 'data-je-lottie' => 'release-animation.json', 'aria-hidden' => 'true']],
@@ -27,8 +27,8 @@ final class ReleaseNotes {
         'Eigene Website-Stile und lokale PNG-Mailbilder werden unterstützt. Die Stilgruppenverwaltung und ihre Exporte erhalten die zusätzlichen Regeln.',
         'Generierung und Vorschau veröffentlichen weiterhin nichts. Native Beitragsrechte, Bildpflichten und Benachrichtigungen bleiben wirksam.',
       ]],
-      'wiki' => ['#type' => 'link', '#title' => 'Anleitung im Original-Wiki öffnen', '#url' => \Drupal\Core\Url::fromUri('https://github.com/jan-erbert/ai-beitragseinreichung/wiki'), '#attributes' => ['target' => '_blank', 'rel' => 'noopener noreferrer']],
-      'note' => ['#type' => 'item', '#plain_text' => 'Zum Testen führt die Anleitung noch zum WordPress-Wiki. Der Drupal-Ablauf kann davon abweichen.'],
+      'wiki' => ['#type' => 'link', '#title' => 'Drupal-Anleitung im Wiki öffnen', '#url' => \Drupal\Core\Url::fromUri('https://github.com/jan-erbert/ai-beitragseinreichung-drupal/wiki'), '#attributes' => ['target' => '_blank', 'rel' => 'noopener noreferrer']],
+      'note' => ['#type' => 'item', '#plain_text' => 'Die Drupal-Anleitung wird aus docs/ gepflegt und mit dem GitHub-Wiki synchronisiert.'],
     ];
   }
 }

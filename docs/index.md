@@ -1,6 +1,6 @@
 # JE KI-Beiträge für Drupal
 
-**Anleitung für Version 1.0.0**
+**Anleitung für Version 1.0.1**
 
 Das Modul ergänzt Drupal um eine zweite Möglichkeit, Beiträge vorzubereiten. Aus Text oder Stichpunkten entsteht ein KI-Vorschlag. Du prüfst ihn und bearbeitest ihn anschließend im normalen Beitragseditor. Die klassische Beitragserstellung bleibt erhalten.
 
@@ -40,4 +40,4 @@ Redaktion, Protokolllesen, Protokolllöschen und Einstellungen verwenden getrenn
 
 Die Anleitung und Abbildungen der Bedienoberfläche liegen unter `docs/`.
 
-Die Themen orientieren sich am Original-Wiki, die beschriebenen Abläufe am Drupal-Modul. Es wird kein separates öffentliches Wiki vorausgesetzt. Siehe [Dokumentation und Backstage](backstage.md) sowie [Quellen und Abgrenzung](quellen.md).
+Die Themen orientieren sich am Original-Wiki, die beschriebenen Abläufe am Drupal-Modul. Das [GitHub-Wiki](https://github.com/jan-erbert/ai-beitragseinreichung-drupal/wiki) erhält dieselben Inhalte aus `docs/`. Siehe [Dokumentation und Backstage](backstage.md) sowie [Quellen und Abgrenzung](quellen.md).

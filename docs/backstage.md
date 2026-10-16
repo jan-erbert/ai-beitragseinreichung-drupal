@@ -29,8 +29,8 @@ Ein Backstage-TechDocs-Einstieg benötigt eine registrierte Komponente, Lesezugr
 
 Die Ablage unter `docs/` registriert keine Komponente und setzt keine öffentliche Freigabe voraus. Ob neue Commits automatisch erscheinen, bestimmt die jeweilige Backstage-Anbindung. Ein erfolgreicher Push bestätigt zunächst nur den Repository-Stand; eine veröffentlichte Ausgabe muss gesondert geprüft werden.
 
-## Späteres Wiki
+## GitHub-Wiki
 
-Ein eigenes öffentliches Forgejo-/GitHub-Wiki ist weiterhin zurückgestellt. Die Dateien unter `docs/` bleiben die gepflegte Quelle. Bestehende Links auf das WordPress-Wiki sind vorläufige Querverweise, kein Ersatz für die Drupal-Anleitung.
+Das [Drupal-Wiki](https://github.com/jan-erbert/ai-beitragseinreichung-drupal/wiki) wird aus `docs/` erzeugt. Inhalt und Bilder werden nicht separat im Wiki gepflegt. Der Abgleich übersetzt Markdown-Verweise, erzeugt Home und Navigation und übernimmt die Dokumentationsbilder. Die [Veröffentlichungsanleitung](veroeffentlichen.md) beschreibt den gemeinsamen Push und die lokale Einrichtung.
 
 [Zur Startseite](index.md) · Weiter: [Quellen](quellen.md)

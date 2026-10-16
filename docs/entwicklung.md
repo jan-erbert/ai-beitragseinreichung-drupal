@@ -1,6 +1,6 @@
 # Architektur, Prüfungen und Grenzen
 
-Eigenständiges Modul `je_ai_submission`, Version **1.0.0**, Lizenz GPL-2.0-or-later. Drupal AI übernimmt die Anbieteranbindung. Der Hauptbeitrag bleibt eine normale Drupal-Node; es gibt keinen zweiten Beitragsdatenspeicher des Moduls.
+Eigenständiges Modul `je_ai_submission`, Version **1.0.1**, Lizenz GPL-2.0-or-later. Drupal AI übernimmt die Anbieteranbindung. Der Hauptbeitrag bleibt eine normale Drupal-Node; es gibt keinen zweiten Beitragsdatenspeicher des Moduls.
 
 ## Aufgabenverteilung
 
@@ -87,7 +87,7 @@ Browserprüfungen ergänzen Formulartests: Maus-/Tastaturauswahl, Speichern, Feh
 | Private und externe Mailbilder | Bewusst ausgeschlossen. Öffentliche lokale Dateien werden begrenzt verkleinert eingebettet. |
 | Bilder/Kategorien im KI-Formular | Bewusst im normalen Beitragseditor belassen. |
 | Newsletter, Jahresarchive, URL-Aliase, Galerie/Slider/Lightbox und Beitragsbildpflicht | Funktionen des Hauptprojekts, nicht des portablen Moduls. |
-| Eigenständiges öffentliches Wiki | Zurückgestellt; `docs/` ist die gepflegte Quelle. |
+| GitHub-Wiki | Wird aus `docs/` erzeugt; direkte Wiki-Änderungen werden beim nächsten Abgleich ersetzt. |
 
 ## Dokumentation pflegen
 

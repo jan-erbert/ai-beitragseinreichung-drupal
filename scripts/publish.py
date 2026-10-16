@@ -45,6 +45,22 @@ def tracked(root):
     return {name: git(root, "show", "HEAD:" + name).stdout for name in names if name}
 
 
+def executable_files(root):
+    """Erhält die im Quellcommit festgelegten ausführbaren Git-Dateien."""
+    entries = git(root, "ls-tree", "-r", "-z", "HEAD").stdout.split(b"\0")
+    result = set()
+    for entry in entries:
+        if not entry:
+            continue
+        metadata, name = entry.split(b"\t", 1)
+        mode = metadata.split()[0]
+        if mode not in {b"100644", b"100755"}:
+            raise ValueError("Nicht unterstützter Git-Dateityp.")
+        if mode == b"100755":
+            result.add(name.decode())
+    return result
+
+
 def commit_if_changed(root, message):
     """Commitet ausschließlich die vorbereiteten Änderungen im eigenen Checkout."""
     git(root, "add", "--all")
@@ -109,7 +125,7 @@ def main():
     if tracked(source) != files:
         raise ValueError("Quellstand wurde aktualisiert. Bitte erneut veröffentlichen.")
     old_public = tracked(public)
-    write_managed(public, files, old_public)
+    write_managed(public, files, old_public, executable_files(source))
     commit_if_changed(
         public,
         "Publish source snapshot "

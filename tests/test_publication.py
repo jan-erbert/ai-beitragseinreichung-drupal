@@ -166,6 +166,7 @@ class PublicationTests(unittest.TestCase):
             self.assertEqual(
                 (public / "README.md").read_text(), "Coordinated normal push."
             )
+            self.assertTrue((public / ".githooks/pre-push").stat().st_mode & 0o111)
             before = {n: git(p, "rev-parse", "HEAD") for n, p in checkouts.items()}
             (source / "leak.txt").write_text("sk-" + "x" * 30)
             git(source, "add", "leak.txt")

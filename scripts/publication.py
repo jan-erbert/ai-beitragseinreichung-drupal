@@ -153,7 +153,7 @@ def wiki_pages(files, repository):
     return result
 
 
-def write_managed(root, files, old_names):
+def write_managed(root, files, old_names, executable=()):
     """Ersetzt nur explizit verwaltete Dateien innerhalb des sauberen Checkouts."""
     root = Path(root).resolve()
     for name in set(old_names) | set(files):
@@ -163,5 +163,6 @@ def write_managed(root, files, old_names):
         if name in files:
             target.parent.mkdir(parents=True, exist_ok=True)
             target.write_bytes(files[name])
+            target.chmod(0o755 if name in executable else 0o644)
         elif target.is_file():
             target.unlink()

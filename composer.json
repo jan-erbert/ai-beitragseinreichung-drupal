@@ -21,5 +21,11 @@
   },
   "extra": {
     "installer-name": "je_ai_submission"
-  }
+  },
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://packages.drupal.org/8"
+    }
+  ]
 }

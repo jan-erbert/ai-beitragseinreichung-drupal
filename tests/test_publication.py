@@ -8,7 +8,12 @@ import unittest
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
-from publication import check_files, wiki_pages, write_managed  # noqa: E402
+from publication import (
+    check_files,
+    wiki_anchors,
+    wiki_pages,
+    write_managed,
+)  # noqa: E402
 
 
 class PublicationTests(unittest.TestCase):
@@ -52,6 +57,12 @@ class PublicationTests(unittest.TestCase):
         self.assertIn(b"/wiki/Home", result["help.md"])
         self.assertIn(b"[Help]", result["_Sidebar.md"])
         self.assertEqual(result["images/test.png"], b"image-fixture")
+
+    def test_unicode_anchors_follow_github(self):
+        """Erhält funktionsfähige Wiki-Abschnitte mit deutschen Umlauten."""
+        anchors = wiki_anchors("## Über Prüfungen\n## Über Prüfungen\n")
+        self.assertEqual(anchors["uber-prufungen"], "über-prüfungen")
+        self.assertEqual(anchors["uber-prufungen_1"], "über-prüfungen-1")
 
     def test_missing_links_are_rejected(self):
         """Verhindert ein Wiki mit nicht vorhandenen lokalen Linkzielen."""

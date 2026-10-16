@@ -2,8 +2,9 @@
 
 import json
 import re
+import unicodedata
 from pathlib import Path, PurePosixPath
-from urllib.parse import urlsplit
+from urllib.parse import quote, unquote, urlsplit
 
 SECRET_RULES = {
     "Privater Schlüssel": rb"-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----",
@@ -49,6 +50,35 @@ def check_files(files, forbidden=()):
         raise ValueError("Veröffentlichungsprüfung abgebrochen:\n" + "\n".join(errors))
 
 
+def wiki_anchors(markdown):
+    """Ordnet MkDocs-Abschnittsnamen den Unicode-Ankern von GitHub zu."""
+    result = {}
+    markdown_counts = {}
+    github_counts = {}
+    fenced = False
+    for line in markdown.splitlines():
+        if line.startswith("```"):
+            fenced = not fenced
+        if fenced or not re.match(r"^#{1,6} ", line):
+            continue
+        title = re.sub(r"^#+\s+", "", line).strip().lower()
+        base = re.sub(r"[^\w -]", "", title).replace(" ", "-")
+        ascii_base = (
+            unicodedata.normalize("NFKD", title).encode("ascii", "ignore").decode()
+        )
+        ascii_base = re.sub(r"[^\w -]", "", ascii_base)
+        ascii_base = re.sub(r"[-\s]+", "-", ascii_base).strip("-")
+        count = markdown_counts.get(ascii_base, 0)
+        github_count = github_counts.get(base, 0)
+        source = ascii_base + ("_" + str(count) if count else "")
+        target = base + ("-" + str(github_count) if github_count else "")
+        result[source] = target
+        result[target] = target
+        markdown_counts[ascii_base] = count + 1
+        github_counts[base] = github_count + 1
+    return result
+
+
 def wiki_pages(files, repository):
     """Übersetzt lokale Markdown-Verweise und Bilder für GitHub-Wikiseiten."""
     prefix = "docs/"
@@ -78,8 +108,14 @@ def wiki_pages(files, repository):
             raise ValueError("Nicht unterstützter relativer Wiki-Verweis: " + target)
         if url.path not in docs:
             raise ValueError("Fehlendes Wiki-Ziel: " + target)
-        suffix = ("#" + url.fragment) if url.fragment else ""
+        suffix = ""
         if url.path in pages:
+            if url.fragment:
+                anchors = wiki_anchors(docs[url.path].decode())
+                fragment = unquote(url.fragment)
+                if fragment not in anchors:
+                    raise ValueError("Fehlender Wiki-Abschnitt: " + target)
+                suffix = "#" + quote(anchors[fragment], safe="-_")
             converted = wiki_url + "/" + pages[url.path] + suffix
         else:
             converted = (

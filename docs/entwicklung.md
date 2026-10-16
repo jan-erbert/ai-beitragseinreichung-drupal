@@ -46,7 +46,7 @@ PNG-Mailkopien liegen im Drupal-Temporärverzeichnis. Keine Laufzeitdateien oder
 Im Modul-Checkout:
 
 ```bash
-composer run lint
+composer --no-plugins run lint
 php tests/run.php
 php tests/run.php /pfad/zum/drupal/vendor/autoload.php
 ```

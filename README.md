@@ -48,3 +48,5 @@ Modullizenz: GPL-2.0-or-later. Lizenzhinweise des lokalen Lucide-Bestands liegen
 Das öffentliche Repository heißt [ai-beitragseinreichung-drupal](https://github.com/jan-erbert/ai-beitragseinreichung-drupal). Die öffentliche Historie beginnt mit dem bereinigten Stand 1.0.0. Ältere interne Entwicklungsstände werden nicht übernommen.
 
 GitHub Actions prüft Composer-Metadaten, PHP-Syntax und die isolierten Tests mit Composer-Abhängigkeiten unter PHP 8.3 und 8.4. Native Drupal-Integrationstests erfordern zusätzlich eine passend eingerichtete Testinstallation; sie werden durch diese Prüfungen nicht ersetzt. Dependabot prüft monatlich Composer- und Action-Abhängigkeiten. Änderungen an Abhängigkeiten werden als Pull Request vorgeschlagen.
+
+Für Forgejo liegt dieselbe PHP-Prüfung unter `.forgejo/workflows/quality.yml`. Dort sind Action-Quellen als vollständige URLs angegeben; GitHub verwendet die übliche Schreibweise unter `.github/workflows/quality.yml`. Beide prüfen PHP 8.3 und 8.4. Composer-Plugins bleiben bei der isolierten Paketinstallation und beim Lint ausgeschaltet; Website-Dateien werden dabei nicht erzeugt oder verändert.

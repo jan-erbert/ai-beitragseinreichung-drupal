@@ -90,6 +90,10 @@ final class SubmissionForm extends FormBase {
       $form['actions']['accept'] = ['#type' => 'submit', '#value' => $this->t('Im Beitragseditor weiterbearbeiten'), '#button_type' => 'primary', '#attributes' => ['data-je-ai-accept' => '1'], '#submit' => ['::submitForm']];
     }
     $form['actions']['normal'] = ['#type' => 'link', '#title' => $this->t('Beitrag ohne KI erstellen'), '#url' => Url::fromRoute('node.add', ['node_type' => $config->get('content_type')])];
+    $form['help'] = ['#type' => 'container', '#weight' => 1001, '#attributes' => ['class' => ['je-ai-help-links']]];
+    foreach (['beitrag-einreichen' => $this->t('Beitrag erstellen'), 'gute-beitraege' => $this->t('Gute Beiträge schreiben')] as $page => $label) {
+      $form['help'][$page] = ['#type' => 'link', '#title' => $label, '#url' => Url::fromUri(\Drupal\je_ai_submission\Service\ReleaseNotes::WIKI_URL . '/' . $page), '#attributes' => ['target' => '_blank', 'rel' => 'noopener noreferrer']];
+    }
     return $form;
   }
 

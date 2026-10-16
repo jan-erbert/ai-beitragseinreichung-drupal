@@ -33,3 +33,5 @@ Unter **Änderungswunsch an die KI** formulierst du eine konkrete Korrektur am v
 **Im Beitragseditor weiterbearbeiten** öffnet das ungespeicherte native Drupal-Formular. Dort ergänzt du Medien und prüfst den Abschluss. **Beitrag ohne KI erstellen** führt direkt in die normale Beitragserstellung, ohne KI-Anfrage.
 
 [Zur Startseite](index.md) · Weiter: [Gute Beiträge schreiben](gute-beitraege.md)
+
+Am Formularende öffnen **Beitrag erstellen** und **Gute Beiträge schreiben** die passenden Seiten im Drupal-Wiki in einem neuen Tab. Deine bisherigen Eingaben bleiben im Formular.

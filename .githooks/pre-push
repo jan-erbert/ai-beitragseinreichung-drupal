@@ -1,0 +1,42 @@
+#!/usr/bin/env python3
+"""Gleicht öffentliche Kopie und Wiki vor dem lokalen Quell-Push ab."""
+
+import os
+import subprocess
+import sys
+from pathlib import Path
+
+
+def main():
+    """Erweitert nur main-Pushes aus dem ausdrücklich eingerichteten Quell-Checkout."""
+    if os.environ.get("JE_PUBLISH_COORDINATED") == "1":
+        return 0
+    updates = [line.split() for line in sys.stdin]
+    if len(sys.argv) < 2 or sys.argv[1] != "origin":
+        return 0
+    if not any(row[0] == "refs/heads/main" for row in updates if row):
+        return 0
+    mode = subprocess.run(
+        ["git", "config", "--get", "publication.mode"], capture_output=True
+    )
+    if mode.stdout.strip() != b"source":
+        return 0
+    root = subprocess.check_output(["git", "rev-parse", "--show-toplevel"])
+    root = Path(root.decode().strip())
+    env = os.environ.copy()
+    for key in (
+        "GIT_DIR",
+        "GIT_WORK_TREE",
+        "GIT_INDEX_FILE",
+        "GIT_COMMON_DIR",
+        "GIT_PREFIX",
+    ):
+        env.pop(key, None)
+    return subprocess.run(
+        [sys.executable, str(root / "scripts/publish.py"), "--from-pre-push"],
+        env=env,
+    ).returncode
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

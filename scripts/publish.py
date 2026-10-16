@@ -3,6 +3,7 @@
 
 import argparse
 import json
+import os
 import subprocess
 from pathlib import Path
 
@@ -12,7 +13,10 @@ from publication import MANIFEST, check_files, wiki_pages, write_managed
 def git(root, *args, check=True):
     """Führt einen Git-Schritt ohne Shell und ohne Ausgabe von Zugangsdaten aus."""
     return subprocess.run(
-        ["git", "-C", str(root), *args], check=check, capture_output=True
+        ["git", "-C", str(root), *args],
+        check=check,
+        capture_output=True,
+        env={**os.environ, "JE_PUBLISH_COORDINATED": "1"},
     )
 
 
@@ -57,6 +61,7 @@ def main():
     parser.add_argument(
         "--check", action="store_true", help="Nur prüfen, nichts kopieren oder pushen"
     )
+    parser.add_argument("--from-pre-push", action="store_true", help=argparse.SUPPRESS)
     args = parser.parse_args()
     source = Path(__file__).resolve().parent.parent
     if setting(source, "mode") != "source":
@@ -98,7 +103,7 @@ def main():
     if args.check:
         print("Geprüft: Commit, Zielordner, öffentliche Dateien und Wiki. Kein Push.")
         return
-    for root in (source, public, wiki):
+    for root in ((public, wiki) if args.from_pre_push else (source, public, wiki)):
         git(root, "pull", "--ff-only")
     # Ein inzwischen übernommener Commit muss erneut geprüft werden.
     if tracked(source) != files:
@@ -114,10 +119,13 @@ def main():
     old_wiki = json.loads(manifest.read_text()) if manifest.exists() else []
     write_managed(wiki, generated, old_wiki)
     commit_if_changed(wiki, "Synchronize documentation from docs")
-    for root in (source, public, wiki):
+    for root in ((public, wiki) if args.from_pre_push else (source, public, wiki)):
         git(root, "push", "origin", "HEAD")
         print("Aktualisiert: " + root.name)
-    print("Alle drei Ziele aktualisiert. CI-Ergebnisse anschließend kontrollieren.")
+    if args.from_pre_push:
+        print("Öffentliche Kopie und Wiki aktualisiert; Quell-Push wird fortgesetzt.")
+    else:
+        print("Alle drei Ziele aktualisiert. CI-Ergebnisse anschließend kontrollieren.")
 
 
 if __name__ == "__main__":

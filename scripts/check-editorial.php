@@ -57,6 +57,9 @@ try {
   je_editorial_check(isset($validation->getErrors()['source][additional_instructions']), 'Hinweis-Limit greift serverseitig nicht.');
   $validation->clearErrors();
   $markup = $submission->buildForm([], new FormState());
+  foreach (['beitrag-einreichen', 'gute-beitraege'] as $page) {
+    je_editorial_check(str_ends_with($markup['help'][$page]['#url']->toString(), '/ai-beitragseinreichung-drupal/wiki/' . $page), 'Passende Formular-Anleitung fehlt.');
+  }
   je_editorial_check(isset($markup['source']['additional_instructions']) && $markup['progress']['#tag'] === 'dialog', 'Hinweisfeld oder Verarbeitungsdialog fehlt.');
   $form = [];
   $submission->generate($form, $state);
@@ -82,6 +85,8 @@ try {
   $switcher->switchBack();
   $switcher->switchTo(\Drupal\user\Entity\User::load(1));
   je_editorial_check(\Drupal::service('access_manager')->checkNamedRoute('je_ai_submission.log_delete', ['log' => '1'], \Drupal::currentUser()), 'Admin kann Löschbestätigung nicht öffnen.');
+  $settings_help = SettingsForm::create(\Drupal::getContainer())->buildForm([], new FormState());
+  je_editorial_check(str_ends_with($settings_help['help']['settings']['#url']->toString(), '/ai-beitragseinreichung-drupal/wiki/einstellungen'), 'Einstellungs-Anleitung fehlt.');
   $count = \Drupal::database()->select('node')->countQuery()->execute()->fetchField();
   $id = \Drupal::service('je_ai_submission.audit')->record('Lokale Prüfung', 'generate', 1, ['text' => 'Nur Test'], NULL);
   $delete = new LogDeleteForm();

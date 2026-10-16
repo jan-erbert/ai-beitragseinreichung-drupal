@@ -7,6 +7,7 @@ namespace Drupal\je_ai_submission\Service;
 /** Enthält die tatsächlichen Neuerungen dieser Drupal-Version. */
 final class ReleaseNotes {
   public const VERSION = '1.0.1';
+  public const WIKI_URL = 'https://github.com/jan-erbert/ai-beitragseinreichung-drupal/wiki';
 
   /** Baut den Versionshinweis mit der aktuellen Drupal-Anleitung. */
   public static function content(): array {
@@ -27,7 +28,7 @@ final class ReleaseNotes {
         'Eigene Website-Stile und lokale PNG-Mailbilder werden unterstützt. Die Stilgruppenverwaltung und ihre Exporte erhalten die zusätzlichen Regeln.',
         'Generierung und Vorschau veröffentlichen weiterhin nichts. Native Beitragsrechte, Bildpflichten und Benachrichtigungen bleiben wirksam.',
       ]],
-      'wiki' => ['#type' => 'link', '#title' => 'Drupal-Anleitung im Wiki öffnen', '#url' => \Drupal\Core\Url::fromUri('https://github.com/jan-erbert/ai-beitragseinreichung-drupal/wiki'), '#attributes' => ['target' => '_blank', 'rel' => 'noopener noreferrer']],
+      'wiki' => ['#type' => 'link', '#title' => 'Drupal-Anleitung im Wiki öffnen', '#url' => \Drupal\Core\Url::fromUri(self::WIKI_URL), '#attributes' => ['target' => '_blank', 'rel' => 'noopener noreferrer']],
       'note' => ['#type' => 'item', '#plain_text' => 'Die Drupal-Anleitung wird aus docs/ gepflegt und mit dem GitHub-Wiki synchronisiert.'],
     ];
   }

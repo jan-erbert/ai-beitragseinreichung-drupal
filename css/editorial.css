@@ -111,3 +111,5 @@
 
 .je-ai-choice__error { color: #a51b00; margin-block: .5rem; }
 .je-ai-choice__trigger[aria-invalid="true"] { border-color: #a51b00; }
+
+.je-ai-help-links { display: flex; flex-wrap: wrap; gap: .6rem 1.5rem; margin-block: 1.5rem; padding-block-start: 1rem; border-top: 1px solid #dce4ec; font-size: .9rem; }

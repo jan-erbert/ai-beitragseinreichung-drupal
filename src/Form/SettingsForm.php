@@ -189,6 +189,9 @@ final class SettingsForm extends ConfigFormBase {
     unset($form['limits']);
     $form['roles']['#weight'] = $weight++;
     $form['actions']['#weight'] = $weight;
+    $form['help'] = ['#type' => 'container', '#weight' => $weight + 1, '#attributes' => ['class' => ['je-ai-help-links']],
+      'settings' => ['#type' => 'link', '#title' => $this->t('Einstellungen erklärt'), '#url' => Url::fromUri(\Drupal\je_ai_submission\Service\ReleaseNotes::WIKI_URL . '/einstellungen'), '#attributes' => ['target' => '_blank', 'rel' => 'noopener noreferrer']],
+    ];
     return parent::buildForm($form, $form_state);
   }
 

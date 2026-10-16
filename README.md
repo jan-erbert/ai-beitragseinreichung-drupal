@@ -53,6 +53,6 @@ Für Forgejo liegt dieselbe PHP-Prüfung unter `.forgejo/workflows/quality.yml`.
 
 ## Gemeinsam veröffentlichen
 
-Im als Quelle eingerichteten Checkout `git publish` verwenden. Der Befehl prüft den eingecheckten Stand und aktualisiert Forgejo, die öffentliche GitHub-Kopie und deren Wiki. `git publish --check` führt nur die Vorprüfung aus. Rohes `git push` betrifft weiterhin nur sein jeweiliges Ziel und ersetzt diesen gemeinsamen Ablauf nicht.
+Im als Quelle eingerichteten Checkout `git publish` verwenden. Der Befehl prüft den eingecheckten Stand und aktualisiert Forgejo, die öffentliche GitHub-Kopie und deren Wiki. `git publish --check` führt nur die Vorprüfung aus. Auf dem eingerichteten Entwicklungsrechner startet auch `git push origin main` den Abgleich über den lokalen Pre-Push-Hook. Andere Rechner benötigen die beschriebene Einrichtung.
 
 Einrichtung, Grenzen und Umgang mit Teilfehlern: [Veröffentlichungsanleitung](docs/veroeffentlichen.md). Die vollständige interne Historie darf nicht auf den öffentlichen Branch gespiegelt werden. Wiki-Seiten ausschließlich unter `docs/` bearbeiten.

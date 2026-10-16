@@ -76,3 +76,5 @@ Die Mindestwortzahl wird vor einer KI-Anfrage geprüft. Das Stundenlimit ist kei
 Die zusätzliche Übersicht zeigt je Drupal-Rolle KI-Nutzung, Protokolllesen, Löschen und Einstellungen. Sie verlinkt zur nativen Berechtigungsverwaltung, wenn dein Konto diese öffnen darf. Neue KI-Freigaben erhalten Lesen als anpassbaren Standard. Einzelheiten und Umfang der Freigaben: [Benutzerrechte](benutzerrechte.md).
 
 [Zur Startseite](index.md) · Weiter: [Stilgruppen](stilgruppen.md)
+
+**Einstellungen erklärt** am Formularende öffnet diese Anleitung im Drupal-Wiki in einem neuen Tab.

@@ -8,12 +8,12 @@ import unittest
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
-from publication import (
+from publication import (  # noqa: E402
     check_files,
     wiki_anchors,
     wiki_pages,
     write_managed,
-)  # noqa: E402
+)
 
 
 class PublicationTests(unittest.TestCase):
@@ -154,6 +154,19 @@ class PublicationTests(unittest.TestCase):
                 before, {n: git(p, "rev-parse", "HEAD") for n, p in checkouts.items()}
             )
             self.assertNotEqual(before["source"], before["public"])
+            (source / ".githooks").mkdir()
+            hook = source / ".githooks/pre-push"
+            shutil.copyfile(scripts.parent / ".githooks/pre-push", hook)
+            hook.chmod(0o755)
+            git(source, "config", "core.hooksPath", ".githooks")
+            (source / "README.md").write_text("Coordinated normal push.")
+            git(source, "add", ".")
+            git(source, "commit", "-m", "Hook fixture")
+            git(source, "push", "origin", "main")
+            self.assertEqual(
+                (public / "README.md").read_text(), "Coordinated normal push."
+            )
+            before = {n: git(p, "rev-parse", "HEAD") for n, p in checkouts.items()}
             (source / "leak.txt").write_text("sk-" + "x" * 30)
             git(source, "add", "leak.txt")
             git(source, "commit", "-m", "Rejected fixture")

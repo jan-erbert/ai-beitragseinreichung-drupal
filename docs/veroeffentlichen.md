@@ -9,7 +9,7 @@ Die interne Entwicklung und die öffentliche GitHub-Kopie haben getrennte Histor
 3. Mit `git publish` Quelle, öffentliche Kopie und Wiki aktualisieren.
 4. Die aktuellen Qualitätsläufe auf beiden Plattformen kontrollieren.
 
-Nicht im öffentlichen Checkout weiterentwickeln oder Wiki-Seiten manuell bearbeiten. Die öffentliche Kopie und die erzeugten Wiki-Dateien werden aus der Quelle aktualisiert. Ein gewöhnliches `git push` überträgt nur an das angegebene Remote; es ist kein gemeinsamer Veröffentlichungsbefehl.
+Nicht im öffentlichen Checkout weiterentwickeln oder Wiki-Seiten manuell bearbeiten. Die öffentliche Kopie und die erzeugten Wiki-Dateien werden aus der Quelle aktualisiert. Auf dem eingerichteten Quell-Checkout übernimmt der Pre-Push-Hook auch bei `git push origin main` den Abgleich der öffentlichen Kopie und des Wikis. Er stoppt den Quell-Push bei einem Fehler. Auf anderen Klonen ist dieser Hook zunächst nicht aktiviert; ohne Einrichtung überträgt ein gewöhnlicher Push nur an sein angegebenes Ziel.
 
 ## Was der Befehl prüft
 
@@ -36,7 +36,10 @@ git config publication.publicUrl https://github.com/jan-erbert/ai-beitragseinrei
 git config publication.wikiUrl https://github.com/jan-erbert/ai-beitragseinreichung-drupal.wiki.git
 git config publication.publicRoot 08288913641b5d9475d9ba593f7a96a158a10f89
 git config alias.publish '!python3 scripts/publish.py'
+git config core.hooksPath .githooks
 ```
+
+Vor dem Setzen von `core.hooksPath` vorhandene Hook-Konfiguration prüfen; fremde Hooks nicht überschreiben. Der mitgelieferte Hook greift nur bei einem ausdrücklich als Quelle eingerichteten Checkout und einem `main`-Push nach `origin`. Tags und andere Branches bleiben gesonderte Schritte.
 
 `publication.publicRoot` ist der bestätigte öffentliche Startcommit dieses Projekts. Für eine eigene abgeleitete Veröffentlichung den eigenen freigegebenen Startcommit und die eigenen Ziele verwenden. Zusätzliche lokale Ausschlüsse lassen sich mit `git config --add publication.forbiddenPattern 'REGULAERER_AUSDRUCK'` hinterlegen. Diese Git-Konfiguration wird nicht veröffentlicht.
 

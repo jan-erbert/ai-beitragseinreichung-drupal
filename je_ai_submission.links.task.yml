@@ -1,0 +1,19 @@
+je_ai_submission.prepare:
+  title: 'Beitrag vorbereiten'
+  route_name: je_ai_submission.prepare
+  base_route: je_ai_submission.prepare
+je_ai_submission.settings:
+  title: 'Einstellungen'
+  route_name: je_ai_submission.settings
+  base_route: je_ai_submission.prepare
+  weight: 10
+je_ai_submission.log:
+  title: 'KI-Protokoll'
+  route_name: je_ai_submission.log
+  base_route: je_ai_submission.prepare
+  weight: 20
+je_ai_submission.release:
+  title: 'Was ist neu?'
+  route_name: je_ai_submission.release
+  base_route: je_ai_submission.prepare
+  weight: 30

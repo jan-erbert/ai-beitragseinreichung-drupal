@@ -1,0 +1,8 @@
+Lucide Static 1.58.0
+https://registry.npmjs.org/lucide-static/-/lucide-static-1.58.0.tgz
+https://lucide.dev/license
+
+2159 original SVG icons and generated 48px PNG variants.
+Compressed JSON is read locally through PHP zlib; no runtime CDN or package download.
+Rebuild: scripts/build-lucide-catalog.cjs with the extracted package/icons directory.
+Build-only dependency: sharp. Runtime requires no Node.js or rasterization service.

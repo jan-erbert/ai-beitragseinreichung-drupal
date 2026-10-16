@@ -1,0 +1,9 @@
+/* Neutral defaults; website themes can supply their own colors and classes. */
+[class*="je-ai-inline-"] { display: inline-flex; gap: .35em; align-items: baseline; }
+[class*="je-ai-inline-"]::before,
+[class*="je-ai-heading-"]::before { content: ''; display: inline-block; width: 1.1em; height: 1.1em; flex: 0 0 1.1em; background: currentColor; mask: var(--je-ai-icon) center / contain no-repeat; -webkit-mask: var(--je-ai-icon) center / contain no-repeat; vertical-align: -.15em; }
+[class*="je-ai-heading-"]::before { margin-inline-end: .4em; }
+.je-ai-lead { font-size: 1.1em; line-height: 1.65; }
+table.je-ai-results { width: 100%; border-collapse: collapse; margin-block: 1.5em; font-size: .95em; }
+table.je-ai-results th, table.je-ai-results td { padding: .65em; border-bottom: 1px solid #dce3e7; text-align: start; }
+table.je-ai-results th { background: #f3f6f7; }

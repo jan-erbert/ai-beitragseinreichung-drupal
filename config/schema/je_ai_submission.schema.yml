@@ -1,0 +1,75 @@
+je_ai_submission.settings:
+  type: config_object
+  label: 'JE KI-Beiträge Einstellungen'
+  mapping:
+    enabled: {type: boolean, label: 'KI aktiv'}
+    notify_enabled: {type: boolean, label: 'Beitragsbenachrichtigungen aktiv'}
+    notify_author: {type: boolean, label: 'Autor zusätzlich benachrichtigen'}
+    completion_action: {type: string, label: 'Abschlussaktion im Beitragseditor'}
+    review_state: {type: string, label: 'Moderationszustand für eingereichte Beiträge'}
+    mail_header_uuid: {type: string, label: 'Datei-UUID des individuellen Mailheaders'}
+    notify_users:
+      type: sequence
+      label: 'Benachrichtigte Konten'
+      sequence: {type: integer}
+    provider_id: {type: string, label: 'Anbieter'}
+    model_id: {type: string, label: 'Modell'}
+    content_type: {type: string, label: 'Beitragstyp'}
+    body_field: {type: string, label: 'Textfeld'}
+    tags_field: {type: string, label: 'Schlagwortfeld'}
+    tags_vocabulary: {type: string, label: 'Schlagwortvokabular'}
+    text_format: {type: string, label: 'Textformat'}
+    min_input_words: {type: integer, label: 'Mindestanzahl Wörter im Ausgangstext'}
+    max_input_chars: {type: integer, label: 'Eingabelimit'}
+    max_requests_per_hour: {type: integer, label: 'Anfragelimit je Konto'}
+    log_content: {type: boolean, label: 'Textvergleiche speichern'}
+    log_limit: {type: integer, label: 'Maximale Protokolleinträge'}
+    base_instructions: {type: text, label: 'Grundstil'}
+    tag_limit: {type: integer, label: 'Maximale zusätzliche KI-Schlagwörter'}
+    tag_use_existing: {type: boolean, label: 'Vorhandene Begriffe berücksichtigen'}
+    tag_include_location: {type: boolean, label: 'Erkennbaren Ort berücksichtigen'}
+    tag_instructions: {type: text, label: 'Zusätzliche Schlagwortregeln'}
+    preferred_tags:
+      type: sequence
+      label: 'Bevorzugte Schlagwörter'
+      sequence: {type: string}
+    visual_enabled: {type: boolean, label: 'KI-Gestaltung aktiviert'}
+    visual_pool:
+      type: sequence
+      label: 'Freigegebener Symbolpool'
+      sequence:
+        type: mapping
+        mapping:
+          id: {type: string, label: 'Feste Symbolkennung'}
+          icon: {type: string, label: 'Lucide-Symbolname'}
+          label: {type: label, label: 'Bezeichnung'}
+          description: {type: text, label: 'Einsatzbeschreibung'}
+          manual: {type: boolean, label: 'Manuell verfügbar'}
+          ai: {type: boolean, label: 'KI-Freigabe'}
+          inline: {type: boolean, label: 'Im Text'}
+          heading: {type: boolean, label: 'In Überschriften'}
+    styles:
+      type: sequence
+      label: 'Stilgruppen'
+      sequence:
+        type: mapping
+        mapping:
+          id: {type: string, label: 'Kennung'}
+          label: {type: label, label: 'Name'}
+          instructions: {type: text, label: 'Stilvorgaben'}
+          icon: {type: string, label: 'Symbol der Beitragsart'}
+          visual_enabled: {type: boolean, label: 'Gestaltung dieser Stilgruppe aktiv'}
+          visual_instructions: {type: text, label: 'Gestaltungsregeln'}
+          visual_lead: {type: boolean, label: 'Einleitung hervorheben'}
+          visual_table: {type: boolean, label: 'Ergebnistabelle gestalten'}
+          visual_symbols:
+            type: sequence
+            label: 'Erlaubte Symbole'
+            sequence: {type: string}
+
+ckeditor5.plugin.je_ai_submission_visual_preservation:
+  type: mapping
+  label: 'Zusätzliche KI-Gestaltung erhalten'
+  mapping:
+    enabled: {type: boolean, label: 'Erhaltung aktiviert'}
+    elements: {type: string, label: 'Freigegebene HTML-Elemente'}

@@ -1,0 +1,116 @@
+<?php
+
+/**
+ * @file
+ * Registriert die Übergabe an den nativen Beitragseditor.
+ */
+
+/** Verwendet die normale Beitragsbearbeitung für die Entwurfsübernahme. */
+function je_ai_submission_entity_type_alter(array &$entity_types): void {
+  $entity_types['node']->setFormClass('je_ai_submission', \Drupal\je_ai_submission\Form\ArticleDraftForm::class);
+}
+
+/** Registriert eine allgemein überschreibbare Vorlage für Einreichungs-Mails. */
+function je_ai_submission_theme(): array {
+  return [
+    'je_ai_submission_email' => ['variables' => ['message' => NULL, 'is_html' => FALSE], 'template' => 'je-ai-submission-email'],
+    'je_ai_submission_email_default' => ['variables' => ['message' => NULL, 'is_html' => FALSE], 'template' => 'je-ai-submission-email-default'],
+  ];
+}
+
+/** Übergibt dieselben Inhalte als Text und an die optionale HTML-Mailvorlage. */
+function je_ai_submission_mail(string $key, array &$message, array $params): void {
+  if (!in_array($key, ['submitted', 'preview'], TRUE)) { return; }
+  $data = $params['submission'];
+  $message['subject'] = (($data['event'] ?? 'review') === 'published' ? 'Neuer Beitrag veröffentlicht: ' : 'Neuer Beitrag zur Prüfung: ') . preg_replace('/[\r\n]+/', ' ', $data['title']);
+  $message['headers']['Content-Type'] = 'text/html';
+  $message['params']['theme'] = $key === 'preview' ? 'je_ai_submission_email_default' : 'je_ai_submission_email';
+  $uuid = \Drupal::config('je_ai_submission.settings')->get('mail_header_uuid');
+  $header = $uuid && $key !== 'preview' ? \Drupal::service('entity.repository')->loadEntityByUuid('file', $uuid) : NULL;
+  $uri = $header ? $header->getFileUri() : DRUPAL_ROOT . '/' . \Drupal::service('extension.list.module')->getPath('je_ai_submission') . '/assets/ai-beitragseinreichung.png';
+  $message['params']['images'][] = ['uri' => $uri, 'filename' => $header ? $header->getFilename() : 'ai-beitragseinreichung.png', 'filemime' => $header ? $header->getMimeType() : 'image/png', 'cid' => 'je-ai-mail-header'];
+  foreach ($data['images'] ?? [] as $image) { $message['params']['images'][] = array_intersect_key($image, array_flip(['uri', 'filename', 'filemime', 'cid'])); }
+  \Drupal\je_ai_submission\Service\VisualStyles::mail($message);
+  $lines = [$data['intro'] ?? 'Ein neuer Beitrag wurde zur Prüfung eingereicht. Er ist noch nicht veröffentlicht.', $data['title']];
+  foreach ($data['meta'] as $label => $value) { $lines[] = $label . ': ' . $value; }
+  $lines[] = "Vorschautext:\n" . $data['excerpt'];
+  $lines[] = "Beitragsvorschau:\n" . \Drupal\Core\Mail\MailFormatHelper::htmlToText((string) $data['content']);
+  $lines[] = (($data['event'] ?? 'review') === 'published' ? "Beitrag bearbeiten (Anmeldung erforderlich):\n" : "Beitrag prüfen (Anmeldung erforderlich):\n") . $data['url'];
+  $lines[] = "Erstellt mit AI Beitragseinreichung\nPowered by Jan Erbert · https://jan-erbert.de";
+  $message['body'] = [implode("\n\n", $lines)];
+}
+
+/** Ergänzt gespeicherte KI-Beiträge um den ausdrücklich bestätigten Versandweg. */
+function je_ai_submission_form_node_form_alter(array &$form, \Drupal\Core\Form\FormStateInterface $form_state): void {
+  $node = $form_state->getFormObject()->getEntity();
+  if (!$node instanceof \Drupal\node\NodeInterface || $node->bundle() !== \Drupal::config('je_ai_submission.settings')->get('content_type')) { return; }
+  $handoff = $form_state->getFormObject() instanceof \Drupal\je_ai_submission\Form\ArticleDraftForm;
+  $service = \Drupal::service('je_ai_submission.submissions');
+  $entry = !$node->isNew() ? $service->get((int) $node->id()) : NULL;
+  if ($handoff || ($entry && ($node->bundle() === \Drupal::config('je_ai_submission.settings')->get('content_type')) && (\Drupal\je_ai_submission\Service\EditorialFlow::isDirect() || empty($entry['submitted'])))) {
+    \Drupal\je_ai_submission\Service\EditorialFlow::alter($form, $form_state);
+  }
+  if ($node->isNew() || \Drupal\je_ai_submission\Service\EditorialFlow::isDirect()) { return; }
+  if (!$service->access($node, \Drupal::currentUser())->isAllowed()) { return; }
+  $form['je_ai_submit_notice'] = ['#type' => 'item', '#plain_text' => empty($entry['submitted']) ? t('Für die Prüfung zuerst alle Änderungen als Entwurf speichern. Anschließend „Zur Prüfung einreichen“ öffnen. Erst nach Bestätigung wird die Benachrichtigung versendet.') : t('Dieser Beitrag wurde bereits zur Prüfung eingereicht. Weitere Speicherungen lösen keine neuen Einreichungs-Mails aus.'), '#weight' => -90];
+  $form['actions']['je_ai_submit'] = ['#type' => 'link', '#title' => empty($entry['submitted']) ? t('Zur Prüfung einreichen') : t('Einreichung und Versandstatus'), '#url' => \Drupal\Core\Url::fromRoute('je_ai_submission.submit', ['node' => $node->id()]), '#attributes' => ['class' => ['button']], '#weight' => 20];
+  // Die separate Bestätigung ist der vorgesehene Einreichungsweg für KI-Entwürfe.
+  $target = \Drupal::config('je_ai_submission.settings')->get('review_state') ?? 'review';
+  if ($node->get('moderation_state')->value !== $target && isset($form['moderation_state']['widget'][0]['state']['#options'][$target])) {
+    unset($form['moderation_state']['widget'][0]['state']['#options'][$target]);
+  }
+}
+
+/** Entfernt Versandmetadaten beim regulären Löschen des zugehörigen Beitrags. */
+function je_ai_submission_node_delete(\Drupal\node\NodeInterface $node): void {
+  \Drupal::keyValue('je_ai_submission.submissions')->delete((string) $node->id());
+}
+
+/** Räumt ausschließlich veraltete, vom Modul erzeugte Mail-Bildkopien auf. */
+function je_ai_submission_cron(): void {
+  $folder = 'temporary://je-ai-mail';
+  if (!is_dir($folder)) { return; }
+  foreach (\Drupal::service('file_system')->scanDirectory($folder, '/^[a-f0-9]{64}\.(png|jpg)$/', ['recurse' => FALSE]) as $file) {
+    if (filemtime($file->uri) < time() - 7 * 86400) { \Drupal::service('file_system')->delete($file->uri); }
+  }
+}
+
+/** Ergänzt den Einstieg unter Erstellen in der Drupal-Verwaltungsnavigation. */
+function je_ai_submission_menu_links_discovered_alter(array &$links): void {
+  if (\Drupal::moduleHandler()->moduleExists('navigation')) {
+    $links['je_ai_submission.navigation_create'] = [
+      'title' => t('KI-Beitrag erstellen'),
+      'route_name' => 'je_ai_submission.prepare',
+      'parent' => 'navigation.create',
+      'menu_name' => 'content',
+      'provider' => 'je_ai_submission',
+      'weight' => 5,
+    ];
+  }
+}
+
+/** Fügt den kontogebundenen Release-Hinweis außerhalb des Beitragsformulars ein. */
+function je_ai_submission_page_bottom(array &$page_bottom): void {
+  if (\Drupal::routeMatch()->getRouteName() !== 'je_ai_submission.prepare') {
+    return;
+  }
+  $account = \Drupal::currentUser();
+  if ((new \Drupal\je_ai_submission\Access\SubmissionAccess())->access($account)->isAllowed()
+    && \Drupal::service('user.data')->get('je_ai_submission', $account->id(), 'release_seen') !== \Drupal\je_ai_submission\Service\ReleaseNotes::VERSION) {
+    $page_bottom['je_ai_release'] = \Drupal::formBuilder()->getForm(\Drupal\je_ai_submission\Form\ReleaseForm::class, TRUE);
+  }
+}
+
+/** Liefert Gestaltung auch für gespeicherte Artikel bei später deaktivierter KI. */
+function je_ai_submission_page_attachments(array &$attachments): void {
+  $attachments['#attached']['library'][] = 'je_ai_submission/visuals';
+  $attachments['#attached']['html_head'][] = [['#type' => 'html_tag', '#tag' => 'style', '#value' => \Drupal\je_ai_submission\Service\VisualStyles::css()], 'je_ai_visual_styles'];
+  $attachments['#cache']['tags'][] = 'config:je_ai_submission.settings';
+}
+
+/** Neue KI-Freigaben erhalten das getrennte Leserecht als anpassbaren Standard. */
+function je_ai_submission_user_role_presave(\Drupal\user\RoleInterface $role): void {
+  if (!$role->isAdmin() && $role->hasPermission('use je ai submission') && !$role->getOriginal()?->hasPermission('use je ai submission')) {
+    $role->grantPermission('view je ai submission log');
+  }
+}

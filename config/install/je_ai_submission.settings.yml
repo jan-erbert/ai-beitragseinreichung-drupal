@@ -1,0 +1,72 @@
+langcode: de
+enabled: false
+notify_enabled: false
+notify_users: []
+notify_author: false
+completion_action: review
+review_state: review
+mail_header_uuid: ''
+provider_id: openai
+model_id: ''
+content_type: article
+body_field: body
+tags_field: field_tags
+tags_vocabulary: tags
+text_format: basic_html
+log_content: false
+log_limit: 100
+min_input_words: 30
+max_input_chars: 40000
+max_requests_per_hour: 20
+base_instructions: 'Schreibe verständlich, sachlich und in gutem Deutsch. Keine Emojis, keine Werbefloskeln, keine erfundenen Fakten. Namen, Ergebnisse, Datum, Uhrzeit und Orte aus dem Ausgangstext korrekt erhalten. Bei fehlenden Informationen nichts ergänzen.'
+tag_limit: 8
+tag_use_existing: true
+tag_include_location: true
+tag_instructions: 'Nur Begriffe verwenden, die zum Ausgangstext passen. Keine Orte oder Fakten ergänzen.'
+preferred_tags: []
+styles:
+  - id: standardartikel
+    label: Standardartikel
+    instructions: 'Schreibe einen verständlichen, sachlichen Artikel mit kurzem Einstieg, sinnvollen Zwischenüberschriften und kurzen Absätzen. Verwende nur die gelieferten Informationen; keine Fakten ergänzen.'
+    icon: file-text
+    visual_enabled: false
+    visual_instructions: ''
+    visual_lead: false
+    visual_table: false
+    visual_symbols: []
+  - id: veranstaltung
+    label: Veranstaltung
+    instructions: 'Beschreibe den Anlass und die vorhandenen Angaben zu Termin, Ort und Ablauf übersichtlich. Unterscheide eine Ankündigung von einem Rückblick anhand der Vorlage. Keine fehlenden Angaben erfinden.'
+    icon: calendar-days
+    visual_enabled: false
+    visual_instructions: ''
+    visual_lead: false
+    visual_table: false
+    visual_symbols: []
+  - id: presse_medien
+    label: Presse und Medien
+    instructions: 'Formuliere einen sachlichen, präzisen Bericht mit den wesentlichen belegten Informationen am Anfang. Genannte Quellen klar zuordnen, Zitate nur unverändert aus der Vorlage übernehmen. Keine Aussagen, Zitate oder Quellen ergänzen.'
+    icon: newspaper
+    visual_enabled: false
+    visual_instructions: ''
+    visual_lead: false
+    visual_table: false
+    visual_symbols: []
+visual_enabled: false
+visual_pool:
+  - id: information
+    icon: info
+    label: Information
+    description: 'Sachliche Informationen und Hinweise.'
+    manual: true
+    ai: true
+    inline: true
+    heading: true
+  - id: besonderes
+    icon: sparkles
+    label: Besonderes
+    description: 'Besondere Aspekte, sparsam einsetzen.'
+    manual: true
+    ai: true
+    inline: true
+    heading: true

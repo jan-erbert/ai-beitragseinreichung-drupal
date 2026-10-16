@@ -1,0 +1,15 @@
+je_ai_submission.prepare:
+  title: 'KI-Beitrag erstellen'
+  route_name: je_ai_submission.prepare
+  parent: system.admin_content
+  weight: -5
+je_ai_submission.settings:
+  title: 'JE KI-Beiträge'
+  route_name: je_ai_submission.settings
+  parent: system.admin_config_content
+  description: 'KI-Anbindung, Stilgruppen und redaktionelle Vorgaben.'
+je_ai_submission.log:
+  title: 'KI-Protokoll'
+  route_name: je_ai_submission.log
+  parent: system.admin_reports
+  description: 'KI-Vorgänge und redaktionelle Textvergleiche.'

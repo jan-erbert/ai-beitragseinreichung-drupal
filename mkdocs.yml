@@ -1,0 +1,24 @@
+site_name: JE KI-Beiträge für Drupal
+site_description: Anleitung und Administration der zusätzlichen KI-Beitragserstellung für Drupal.
+docs_dir: docs
+use_directory_urls: true
+theme:
+  name: mkdocs
+nav:
+  - Startseite: index.md
+  - Redaktion:
+      - Formular-Übersicht: formular.md
+      - Gute Beiträge schreiben: gute-beitraege.md
+      - Einen Beitrag vorbereiten und speichern: beitrag-einreichen.md
+      - KI-Funktionen: ki-funktionen.md
+  - Administration:
+      - Installation und Einrichtung: installation.md
+      - Einstellungen: einstellungen.md
+      - Stilgruppen: stilgruppen.md
+      - Symbole und Gestaltung: symbole.md
+      - Benutzerrechte und Rollen: benutzerrechte.md
+      - Protokoll und Fehlersuche: protokoll.md
+  - Entwicklung:
+      - Architektur und offene Funktionen: entwicklung.md
+      - Dokumentation und Backstage: backstage.md
+      - Quellen und Abgrenzung zum Original: quellen.md

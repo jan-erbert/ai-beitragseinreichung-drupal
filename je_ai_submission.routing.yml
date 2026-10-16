@@ -1,0 +1,94 @@
+je_ai_submission.prepare:
+  path: '/admin/content/ki-beitrag'
+  defaults:
+    _form: '\Drupal\je_ai_submission\Form\SubmissionForm'
+    _title: 'KI-Beitrag erstellen'
+  requirements:
+    _custom_access: '\Drupal\je_ai_submission\Access\SubmissionAccess::access'
+  options:
+    _admin_route: true
+je_ai_submission.submit:
+  path: '/admin/content/ki-beitrag/einreichen/{node}'
+  defaults:
+    _form: '\Drupal\je_ai_submission\Form\SubmitArticleForm'
+    _title: 'Beitrag zur Prüfung einreichen'
+  requirements:
+    _custom_access: '\Drupal\je_ai_submission\Service\SubmissionNotification::access'
+    node: '\d+'
+  options:
+    _admin_route: true
+    parameters:
+      node:
+        type: entity:node
+je_ai_submission.review:
+  path: '/admin/content/ki-beitrag/uebernehmen/{token}'
+  defaults:
+    _controller: '\Drupal\je_ai_submission\Controller\DraftController::edit'
+    _title: 'Beitragsentwurf bearbeiten'
+  requirements:
+    _custom_access: '\Drupal\je_ai_submission\Access\SubmissionAccess::access'
+    token: '[a-f0-9]{32}'
+  options:
+    _admin_route: true
+je_ai_submission.settings:
+  path: '/admin/config/content/je-ai-submission'
+  defaults:
+    _form: '\Drupal\je_ai_submission\Form\SettingsForm'
+    _title: 'JE KI-Beiträge'
+  requirements:
+    _permission: 'administer je ai submission'
+  options:
+    _admin_route: true
+je_ai_submission.log:
+  path: '/admin/content/ki-beitrag/protokoll'
+  defaults:
+    _controller: '\Drupal\je_ai_submission\Controller\LogController::overview'
+    _title: 'KI-Protokoll'
+  requirements:
+    _permission: 'view je ai submission log'
+  options:
+    _admin_route: true
+je_ai_submission.log_detail:
+  path: '/admin/content/ki-beitrag/protokoll/{log}'
+  defaults:
+    _controller: '\Drupal\je_ai_submission\Controller\LogController::detail'
+    _title: 'KI-Vorgang'
+  requirements:
+    _permission: 'view je ai submission log'
+    log: '\d+'
+  options:
+    _admin_route: true
+je_ai_submission.style_export:
+  path: '/admin/config/content/je-ai-submission/export/{style}'
+  defaults:
+    _controller: '\Drupal\je_ai_submission\Controller\StyleExportController::download'
+    style: 'all'
+  requirements:
+    _permission: 'administer je ai submission'
+    style: '[a-z][a-z0-9_]*'
+je_ai_submission.log_delete:
+  path: '/admin/content/ki-beitrag/protokoll/{log}/loeschen'
+  defaults:
+    _form: '\Drupal\je_ai_submission\Form\LogDeleteForm'
+    _title: 'KI-Protokolleintrag löschen'
+  requirements:
+    _permission: 'view je ai submission log,delete je ai submission log'
+    log: '\d+'
+  options:
+    _admin_route: true
+je_ai_submission.release:
+  path: '/admin/content/ki-beitrag/neu'
+  defaults:
+    _form: '\Drupal\je_ai_submission\Form\ReleaseForm'
+    _title: 'Was ist neu?'
+  requirements:
+    _custom_access: '\Drupal\je_ai_submission\Access\SubmissionAccess::access'
+  options:
+    _admin_route: true
+je_ai_submission.visual_pool:
+  path: '/admin/config/content/je-ai-submission/symbols'
+  defaults:
+    _form: '\Drupal\je_ai_submission\Form\VisualPoolForm'
+    _title: 'Symbolpool und manuelle Stile'
+  requirements:
+    _permission: 'administer je ai submission'

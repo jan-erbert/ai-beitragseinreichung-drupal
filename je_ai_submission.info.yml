@@ -1,0 +1,15 @@
+name: JE KI-Beiträge
+type: module
+description: Zusätzliche Beitragserstellung mit KI-Vorschau und Übernahme in den Drupal-Beitragseditor.
+package: JE
+core_version_requirement: ^11.2
+configure: je_ai_submission.settings
+dependencies:
+  - ai:ai
+  - drupal:node
+  - drupal:text
+  - ckeditor5:ckeditor5
+  - drupal:file
+  - drupal:taxonomy
+  - drupal:content_moderation
+version: 1.0.0

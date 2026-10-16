@@ -1,0 +1,26 @@
+services:
+  je_ai_submission.tags:
+    class: Drupal\je_ai_submission\Service\TagSuggestions
+  je_ai_submission.submissions:
+    class: Drupal\je_ai_submission\Service\SubmissionNotification
+  logger.channel.je_ai_submission:
+    parent: logger.channel_base
+    arguments: ['je_ai_submission']
+  je_ai_submission.gateway:
+    class: Drupal\je_ai_submission\Service\DrupalAiGateway
+    arguments: ['@ai.provider', '@config.factory']
+  je_ai_submission.assistant:
+    class: Drupal\je_ai_submission\Service\ArticleAssistant
+    arguments: ['@je_ai_submission.gateway']
+  je_ai_submission.drafts:
+    class: Drupal\je_ai_submission\Service\DraftTransfer
+    arguments: ['@je_ai_submission.tempstore', '@entity_type.manager', '@current_user', '@config.factory']
+  je_ai_submission.tempstore:
+    class: Drupal\Core\TempStore\PrivateTempStoreFactory
+    arguments: ['@keyvalue.expirable', '@lock', '@current_user', '@request_stack', 3600]
+  je_ai_submission.audit:
+    class: Drupal\je_ai_submission\Service\AuditLog
+    arguments: ['@database', '@config.factory', '@current_user']
+  je_ai_submission.models:
+    class: Drupal\je_ai_submission\Service\ModelCatalog
+    arguments: ['@ai.provider', '@state']

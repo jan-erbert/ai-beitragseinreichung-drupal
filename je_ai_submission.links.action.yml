@@ -1,0 +1,5 @@
+je_ai_submission.prepare:
+  route_name: je_ai_submission.prepare
+  title: 'KI-Beitrag erstellen'
+  appears_on:
+    - system.admin_content

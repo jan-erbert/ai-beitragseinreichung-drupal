@@ -1,0 +1,10 @@
+/vendor/
+/.env
+/.env.*
+/auth.json
+/.vscode/
+/.idea/
+*.token
+*.log
+*.zip
+/.phpunit.cache/

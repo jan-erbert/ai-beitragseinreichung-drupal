@@ -1,0 +1,119 @@
+<?php
+
+/** Definiert das über eigene Lese- und Löschrechte geschützte Redaktionsprotokoll. */
+function je_ai_submission_schema(): array {
+  return ['je_ai_submission_log' => [
+    'description' => 'KI-Vorgänge und optional freigegebene redaktionelle Textvergleiche.',
+    'fields' => [
+      'id' => ['type' => 'serial', 'not null' => TRUE],
+      'created' => ['type' => 'int', 'not null' => TRUE],
+      'uid' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'provider' => ['type' => 'varchar', 'length' => 128, 'not null' => TRUE],
+      'model' => ['type' => 'varchar', 'length' => 128, 'not null' => TRUE],
+      'style' => ['type' => 'varchar', 'length' => 128, 'not null' => TRUE],
+      'operation' => ['type' => 'varchar', 'length' => 16, 'not null' => TRUE],
+      'success' => ['type' => 'int', 'size' => 'tiny', 'not null' => TRUE],
+      'duration_ms' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'reference' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => ''],
+      'nid' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE],
+      'comparison' => ['type' => 'text', 'size' => 'big', 'not null' => FALSE],
+    ],
+    'primary key' => ['id'],
+    'indexes' => ['created' => ['created'], 'uid' => ['uid']],
+  ]];
+}
+
+/** Ergänzt das Protokoll bei bereits installiertem Modul ohne vorhandene Inhalte. */
+function je_ai_submission_update_11001(): void {
+  $schema = \Drupal::database()->schema();
+  if (!$schema->tableExists('je_ai_submission_log')) {
+    $schema->createTable('je_ai_submission_log', je_ai_submission_schema()['je_ai_submission_log']);
+  }
+  $settings = \Drupal::configFactory()->getEditable('je_ai_submission.settings');
+  $settings->set('log_limit', 100)->set('log_content', FALSE)->save();
+}
+
+/** Ergänzt Schlagwortregeln ohne bestehende Stilgruppen oder Vorgaben zu ersetzen. */
+function je_ai_submission_update_11002(): void {
+  $settings = \Drupal::configFactory()->getEditable('je_ai_submission.settings');
+  foreach (['tag_limit' => 8, 'tag_use_existing' => TRUE, 'tag_include_location' => TRUE, 'tag_instructions' => 'Nur Begriffe verwenden, die zum Ausgangstext passen. Keine Orte oder Fakten ergänzen.'] as $key => $value) {
+    if ($settings->get($key) === NULL) {
+      $settings->set($key, $value);
+    }
+  }
+  $settings->save();
+}
+
+/** Erhält vorhandene Protokollrechte beim Aufteilen der bisherigen Admin-Freigabe. */
+function je_ai_submission_update_11003(): void {
+  foreach (\Drupal\user\Entity\Role::loadMultiple() as $role) {
+    if (!$role->isAdmin() && $role->hasPermission('administer je ai submission')) {
+      $role->grantPermission('view je ai submission log')->grantPermission('delete je ai submission log')->save();
+    }
+  }
+}
+
+/** Entfernt ausschließlich moduleigene Versandmetadaten bei der Deinstallation. */
+function je_ai_submission_uninstall(): void {
+  \Drupal::keyValue('je_ai_submission.submissions')->deleteAll();
+}
+
+/** Erhält den bisherigen Prüfweg als Standard ohne Rollenänderungen. */
+function je_ai_submission_update_11004(): void {
+  $settings = \Drupal::configFactory()->getEditable('je_ai_submission.settings');
+  if ($settings->get('completion_action') === NULL) {
+    $settings->set('completion_action', 'review')->save();
+  }
+}
+
+/** Ergänzt die standardmäßig deaktivierte Gestaltung ohne Website-Annahmen. */
+function je_ai_submission_update_11005(): void {
+  $settings = \Drupal::configFactory()->getEditable('je_ai_submission.settings');
+  if ($settings->get('visual_enabled') === NULL) { $settings->set('visual_enabled', FALSE); }
+  if ($settings->get('visual_pool') === NULL) { $settings->set('visual_pool', \Drupal\je_ai_submission\Service\VisualStyles::defaults()); }
+  $styles = $settings->get('styles') ?? [];
+  foreach ($styles as &$style) {
+    $style += ['visual_enabled' => FALSE, 'visual_instructions' => '', 'visual_symbols' => [], 'visual_lead' => FALSE, 'visual_table' => FALSE];
+  }
+  unset($style);
+  $settings->set('styles', $styles);
+  $settings->save();
+}
+
+/** Setzt bei Installation das separate Leserecht für bereits freigegebene KI-Rollen. */
+function je_ai_submission_install(): void {
+  _je_ai_submission_log_read_defaults();
+}
+
+/** Ergänzt Gruppensymbole und den gewünschten Lese-Standard ohne Gruppen zu ersetzen. */
+function je_ai_submission_update_11006(): void {
+  $settings = \Drupal::configFactory()->getEditable('je_ai_submission.settings');
+  $styles = $settings->get('styles') ?? [];
+  foreach ($styles as &$style) {
+    $style = array_intersect_key($style, array_flip(['id', 'label', 'instructions'])) + ['icon' => $style['icon'] ?? 'file-text'] + $style;
+  }
+  unset($style);
+  $settings->set('styles', $styles)->save();
+  _je_ai_submission_log_read_defaults();
+}
+
+/** Vergibt nur Lesen; spätere individuelle Rechteänderungen bleiben möglich. */
+function _je_ai_submission_log_read_defaults(): void {
+  foreach (\Drupal\user\Entity\Role::loadMultiple() as $role) {
+    if (!$role->isAdmin() && $role->hasPermission('use je ai submission') && !$role->hasPermission('view je ai submission log')) {
+      $role->grantPermission('view je ai submission log')->save();
+    }
+  }
+}
+
+/** Sichert bekannte Beitragsarten bestehender Übergaben vor späterer Protokollbereinigung. */
+function je_ai_submission_update_11007(): void {
+  $labels = \Drupal::database()->select('je_ai_submission_log', 'l')->fields('l', ['id', 'style'])->execute()->fetchAllKeyed();
+  $store = \Drupal::keyValue('je_ai_submission.submissions');
+  foreach ($store->getAll() as $nid => $entry) {
+    if (empty($entry['style_label']) && !empty($labels[$entry['log_id'] ?? 0])) {
+      $entry['style_label'] = mb_substr(trim(strip_tags($labels[$entry['log_id']])), 0, 128);
+      $store->set((string) $nid, $entry);
+    }
+  }
+}

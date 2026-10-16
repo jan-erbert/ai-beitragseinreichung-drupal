@@ -1,0 +1,14 @@
+je_ai_submission_visual_preservation:
+  ckeditor5:
+    plugins: [htmlSupport.GeneralHtmlSupport]
+  drupal:
+    label: 'JE KI-Gestaltung erhalten'
+    library: core/ckeditor5.htmlSupport
+    class: Drupal\je_ai_submission\Plugin\CKEditor5Plugin\VisualPreservation
+    elements:
+      - <strong class>
+      - <h2 class>
+    conditions:
+      requiresConfiguration:
+        enabled: true
+      filter: filter_html

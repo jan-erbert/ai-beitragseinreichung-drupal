@@ -1,0 +1,25 @@
+{
+  "name": "jan-erbert/ai-beitragseinreichung-drupal",
+  "description": "Zusätzliche KI-Beitragserstellung für Drupal auf Basis von Drupal AI.",
+  "type": "drupal-custom-module",
+  "license": "GPL-2.0-or-later",
+  "require": {
+    "php": ">=8.3",
+    "drupal/core": "^11.2",
+    "drupal/ai": "^1.5",
+    "league/commonmark": "^2.8",
+    "ext-zlib": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Drupal\\je_ai_submission\\": "src/"
+    }
+  },
+  "scripts": {
+    "test": "php tests/run.php",
+    "lint": "find src tests scripts -name '*.php' -print0 | xargs -0 -n1 php -l"
+  },
+  "extra": {
+    "installer-name": "je_ai_submission"
+  }
+}

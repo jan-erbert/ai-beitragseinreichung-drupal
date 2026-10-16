@@ -1,0 +1,15 @@
+use je ai submission:
+  title: 'KI-Beiträge vorbereiten'
+  description: 'Ausgangstexte zur KI-Überarbeitung senden und Vorschläge in eigene Beitragsentwürfe übernehmen.'
+administer je ai submission:
+  title: 'JE KI-Beiträge konfigurieren'
+  description: 'Anbieter, Modell, Stilgruppen und redaktionelle Vorgaben festlegen.'
+  restrict access: true
+view je ai submission log:
+  title: 'KI-Protokoll ansehen'
+  description: 'Alle KI-Vorgänge und gegebenenfalls gespeicherte Ausgangs- und Ergebnistexte lesen.'
+  restrict access: true
+delete je ai submission log:
+  title: 'KI-Protokolleinträge löschen'
+  description: 'Einzelne Protokolleinträge nach Bestätigung löschen. Zusätzlich ist das Leserecht erforderlich.'
+  restrict access: true
